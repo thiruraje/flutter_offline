@@ -9,7 +9,27 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
+      home:HomePage() ,
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  HomePage({Key key}) : super(key: key);
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+
+  Future getProjectDetails() async {
+    var result = ["thiru","vicky"];
+    return result;    
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
           appBar: AppBar(
             title: Text("Connection"),
           ),
@@ -21,75 +41,85 @@ class MyApp extends StatelessWidget {
                   ConnectivityResult connectivity,
                   Widget child
                   ) {
-                  final bool connected =
-                      connectivity != ConnectivityResult.none;
+                  final bool connected =connectivity != ConnectivityResult.none;
                   return Stack(
                     fit: StackFit.expand,
                     children: [
-                      child,
-                      Positioned(
-                        left: 0.0,
-                        right: 0.0,
-                        height: 32.0,
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          color:
-                              connected ? Color(0xFF00EE44) : Color(0xFFEE4400),
-                          child: connected
-                              ?  Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      "OFFLINE",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
+                      connected ? child :  Center(
+                        child: CircularProgressIndicator(),
+                    ),
+                      // Positioned(
+                      //   bottom: 0.0,
+                      //   right: 0.0,
+                      //   left: 0.0,
+                      //   height: 32.0,
+                      //   child: AnimatedContainer(
+                      //     duration: const Duration(milliseconds: 300),
+                      //     color:
+                      //         connected ? Color(0xFF00EE44) : Color(0xFFEE4400),
+                      //     child: connected
+                      //         ?  Row(
+                      //             mainAxisAlignment: MainAxisAlignment.center,
+                      //             children: <Widget>[
+                      //               Text(
+                      //                 "OFFLINE",
+                      //                 style: TextStyle(color: Colors.white),
+                      //               ),
                                     
-                                  ],
-                                )
-                              : Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      "OFFLINE",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    SizedBox(
-                                      width: 8.0,
-                                    ),
-                                    SizedBox(
-                                      width: 12.0,
-                                      height: 12.0,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2.0,
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                                Colors.white),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                        ),
-                      ),
+                      //             ],
+                      //           )
+                      //         : Row(
+                      //             mainAxisAlignment: MainAxisAlignment.center,
+                      //             children: <Widget>[
+                      //               Text(
+                      //                 "OFFLINE",
+                      //                 style: TextStyle(color: Colors.white),
+                      //               ),
+                      //               SizedBox(
+                      //                 width: 8.0,
+                      //               ),
+                      //               SizedBox(
+                      //                 width: 12.0,
+                      //                 height: 12.0,
+                      //                 child: CircularProgressIndicator(
+                      //                   strokeWidth: 2.0,
+                      //                   valueColor:
+                      //                       AlwaysStoppedAnimation<Color>(
+                      //                           Colors.white),
+                      //                 ),
+                      //               ),
+                      //             ],
+                      //           ),
+                      //   ),
+                      // ),
                     ],
                   );
                 },
                 child: Center(
-                  
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text("ONLINE Or OFFLINE"),
-                      // RaisedButton(
-                      //   onPressed: () {  },
-                      //   child:Text("next page")
-
-                      // )
-                    ],
-                  ),
+                  child: FutureBuilder(
+                        builder: (context, projectSnap) {
+                          if (projectSnap.connectionState == ConnectionState.none &&
+                              projectSnap.hasData == null) {
+                            //print('project snapshot data is: ${projectSnap.data}');
+                            return Container();
+                          }
+                          return ListView.builder(
+                            itemCount: 5,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                height: 50.0,
+                                child: Card(
+                                  child: Center(child: Text("Connected!!!!"))
+                                  ),
+                              );
+                            },
+                          );
+                        },
+                        future: getProjectDetails(),
+                      ),
                 ),
               );
             },
-          )),
-    );
+          ));
   }
 }
