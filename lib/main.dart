@@ -1,6 +1,7 @@
 //main.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_offline/flutter_offline.dart';
+import 'package:network/Connectivity.dart';
 
 void main() => runApp(new MyApp());
 
@@ -23,10 +24,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  Future getProjectDetails() async {
-    var result = ["thiru","vicky"];
-    return result;    
-  }
+  var projectSnap=["thiru","vicky","nan"];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,27 +95,17 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
                 child: Center(
-                  child: FutureBuilder(
-                        builder: (context, projectSnap) {
-                          if (projectSnap.connectionState == ConnectionState.none &&
-                              projectSnap.hasData == null) {
-                            //print('project snapshot data is: ${projectSnap.data}');
-                            return Container();
-                          }
-                          return ListView.builder(
-                            itemCount: 5,
+                  child: ListView.builder(
+                            itemCount:projectSnap.length ,
                             itemBuilder: (context, index) {
                               return Container(
                                 height: 50.0,
                                 child: Card(
-                                  child: Center(child: Text("Connected!!!!"))
+                                  child: Center(child: Text(projectSnap[index].toString()))
                                   ),
                               );
                             },
-                          );
-                        },
-                        future: getProjectDetails(),
-                      ),
+                          ),
                 ),
               );
             },
